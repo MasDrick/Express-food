@@ -39,3 +39,7 @@ exports.updateUserProfile = async (req, res) => {
     res.status(500).json({ message: 'Ошибка при обновлении профиля пользователя' });
   }
 };
+
+
+// На
+const bcrypt = require('bcryptjs');

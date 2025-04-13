@@ -1,4 +1,9 @@
-const bcrypt = require('bcrypt');
+
+
+// На
+const bcrypt = require('bcryptjs');
+
+// Остальной код остается без изменений, так как API bcryptjs совместим с bcrypt
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
