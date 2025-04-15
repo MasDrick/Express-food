@@ -22,7 +22,7 @@ exports.getUserProfile = async (req, res) => {
 exports.updateUserProfile = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { phone, card_number, discount_percent } = req.body;
+    const { phone, card_number, discount_percent, profile_image } = req.body;
     
     // Validate input if needed
     
@@ -30,7 +30,8 @@ exports.updateUserProfile = async (req, res) => {
     const updatedUser = await User.updateUserInfo(userId, {
       phone,
       card_number,
-      discount_percent
+      discount_percent,
+      profile_image
     });
     
     res.json(updatedUser);

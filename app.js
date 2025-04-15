@@ -7,8 +7,9 @@ require('dotenv').config();
 const authRoutes = require('./routes/authRoutes');
 const restaurantRoutes = require('./routes/restaurants');
 const menuRoutes = require('./routes/menu');
-const categoryRoutes = require('./routes/categories'); // Add this line
+const categoryRoutes = require('./routes/categories');
 const userRoutes = require('./routes/userRoutes');
+const orderRoutes = require('./routes/orderRoutes'); // Добавляем новый маршрут
 
 const app = express();
 
@@ -43,8 +44,11 @@ app.use(bodyParser.json());
 app.use('/auth', authRoutes);
 app.use('/api/restaurants', restaurantRoutes);
 app.use('/api/menu', menuRoutes);
-app.use('/api/categories', categoryRoutes); // Add this line
+app.use('/api/categories', categoryRoutes);
 app.use('/api/user', userRoutes);
+// Добавляем маршрут для совместимости с фронтендом
+app.use('/api/users', userRoutes); // Добавляем этот маршрут для поддержки запросов к /api/users/profile
+app.use('/api/orders', orderRoutes);
 
 // Проверка соединения с базой данных
 const db = require('./config/db');

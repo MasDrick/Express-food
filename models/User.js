@@ -42,7 +42,7 @@ class User {
 
   // New method to update user info
   static async updateUserInfo(userId, userInfo) {
-    const { phone, card_number, discount_percent } = userInfo;
+    const { phone, card_number, discount_percent, profile_image } = userInfo;
     
     // Check if user_info record exists
     const [existingInfo] = await db.query(
@@ -54,16 +54,16 @@ class User {
       // Update existing record
       await db.query(
         `UPDATE user_info 
-         SET phone = ?, card_number = ?, discount_percent = ?
+         SET phone = ?, card_number = ?, discount_percent = ?, profile_image = ?
          WHERE user_id = ?`,
-        [phone, card_number, discount_percent, userId]
+        [phone, card_number, discount_percent, profile_image, userId]
       );
     } else {
       // Create new record
       await db.query(
-        `INSERT INTO user_info (user_id, email, phone, card_number, discount_percent)
-         SELECT id, email, ?, ?, ? FROM users WHERE id = ?`,
-        [phone, card_number, discount_percent, userId]
+        `INSERT INTO user_info (user_id, phone, card_number, discount_percent, profile_image)
+         SELECT id, ?, ?, ?, ? FROM users WHERE id = ?`,
+        [phone, card_number, discount_percent, profile_image, userId]
       );
     }
     
