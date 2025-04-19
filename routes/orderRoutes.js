@@ -3,19 +3,10 @@ const router = express.Router();
 const orderController = require('../controllers/orderController');
 const authMiddleware = require('../middleware/authMiddleware');
 
-// Все маршруты требуют аутентификации
-router.use(authMiddleware);
-
-// Получение истории заказов
-router.get('/history', orderController.getOrderHistory);
-
-// Создание нового заказа
-router.post('/', orderController.createOrder);
-
-// Получение деталей заказа
-router.get('/:id', orderController.getOrderDetails);
-
-// Отмена заказа
-router.put('/:id/cancel', orderController.cancelOrder);
+// Добавьте authMiddleware для защищённых маршрутов
+router.post('/', authMiddleware, orderController.createOrder);
+router.get('/', authMiddleware, orderController.getUserOrders);
+router.get('/:orderId', authMiddleware, orderController.getOrderDetails);
+router.put('/:orderId/cancel', authMiddleware, orderController.cancelOrder);
 
 module.exports = router;
