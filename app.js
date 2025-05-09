@@ -25,29 +25,24 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
+// Set up all middleware first
 app.use(cors(corsOptions));
-
-// Настройка сессии
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET || 'my_super_secret',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: false, // В продакшене должно быть true для HTTPS
-      httpOnly: true,
-      sameSite: 'lax',
-      maxAge: 24 * 60 * 60 * 1000, // 1 день
-    },
-  }),
-);
-
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'my_super_secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false, // В продакшене должно быть true для HTTPS
+    httpOnly: true,
+    sameSite: 'lax',
+    maxAge: 24 * 60 * 60 * 1000, // 1 день
+  },
+}));
 app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Add Swagger route
+// Then set up routes
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
-
-// Маршруты
 app.use('/auth', authRoutes);
 app.use('/api/restaurants', restaurantRoutes);
 app.use('/api/menu', menuRoutes);
@@ -57,6 +52,10 @@ app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);
 // Add the new dashboard route
 app.use('/api/admin/dashboard', dashboardRoutes);
+// Add admin orders route in the same section as other routes
+app.use('/api/admin/orders', require('./routes/adminOrderRoutes'));
+
+// Remove the duplicate route registration from line 46
 
 // Проверка соединения с базой данных
 const db = require('./config/db');

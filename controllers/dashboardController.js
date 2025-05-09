@@ -1,20 +1,28 @@
-const db = require('../config/db');
+const db = require("../config/db");
 
 class DashboardController {
   async getStats(req, res) {
     try {
       // Basic stats
-      const [ordersResult] = await db.query('SELECT COUNT(*) as totalOrders FROM orders');
+      const [ordersResult] = await db.query(
+        "SELECT COUNT(*) as totalOrders FROM orders"
+      );
       const totalOrders = ordersResult[0].totalOrders;
 
-      const [usersResult] = await db.query('SELECT COUNT(*) as totalUsers FROM users');
+      const [usersResult] = await db.query(
+        "SELECT COUNT(*) as totalUsers FROM users"
+      );
       const totalUsers = usersResult[0].totalUsers;
 
-      const [restaurantsResult] = await db.query('SELECT COUNT(*) as totalRestaurants FROM restaurants');
+      const [restaurantsResult] = await db.query(
+        "SELECT COUNT(*) as totalRestaurants FROM restaurants"
+      );
       const totalRestaurants = restaurantsResult[0].totalRestaurants;
 
       // Revenue stats
-      const [revenueResult] = await db.query('SELECT SUM(total_amount) as totalRevenue FROM orders');
+      const [revenueResult] = await db.query(
+        "SELECT SUM(total_amount) as totalRevenue FROM orders"
+      );
       const totalRevenue = revenueResult[0].totalRevenue || 0;
 
       // Orders by status
@@ -67,19 +75,22 @@ class DashboardController {
         ORDER BY total_spent DESC
         LIMIT 1
       `);
-      
-      const topSpender = topSpenderResult.length > 0 ? {
-        username: topSpenderResult[0].username,
-        order_count: topSpenderResult[0].order_count,
-        total_spent: topSpenderResult[0].total_spent,
-        email: topSpenderResult[0].email,
-        phone: topSpenderResult[0].phone,
-        card_number: topSpenderResult[0].card_number,
-        discount_percent: topSpenderResult[0].discount_percent,
-        registration_date: topSpenderResult[0].registration_date,
-        orders_count: topSpenderResult[0].orders_count,
-        profile_image: topSpenderResult[0].profile_image
-      } : null;
+
+      const topSpender =
+        topSpenderResult.length > 0
+          ? {
+              username: topSpenderResult[0].username,
+              order_count: topSpenderResult[0].order_count,
+              total_spent: topSpenderResult[0].total_spent,
+              email: topSpenderResult[0].email,
+              phone: topSpenderResult[0].phone,
+              card_number: topSpenderResult[0].card_number,
+              discount_percent: topSpenderResult[0].discount_percent,
+              registration_date: topSpenderResult[0].registration_date,
+              orders_count: topSpenderResult[0].orders_count,
+              profile_image: topSpenderResult[0].profile_image,
+            }
+          : null;
 
       // Return all stats
       res.json({
@@ -91,11 +102,11 @@ class DashboardController {
         recentOrders,
         topRestaurants,
         monthlyRevenue,
-        topSpender
+        topSpender,
       });
     } catch (error) {
-      console.error('Error fetching dashboard stats:', error);
-      res.status(500).json({ message: 'Ошибка при получении статистики' });
+      console.error("Error fetching dashboard stats:", error);
+      res.status(500).json({ message: "Ошибка при получении статистики" });
     }
   }
 
@@ -121,11 +132,13 @@ class DashboardController {
 
       res.json({
         newUsersLast30Days: newUsers[0].count,
-        topUsers
+        topUsers,
       });
     } catch (error) {
-      console.error('Error fetching user stats:', error);
-      res.status(500).json({ message: 'Ошибка при получении статистики пользователей' });
+      console.error("Error fetching user stats:", error);
+      res
+        .status(500)
+        .json({ message: "Ошибка при получении статистики пользователей" });
     }
   }
 
@@ -144,11 +157,13 @@ class DashboardController {
       `);
 
       res.json({
-        topSellingItems: topItems
+        topSellingItems: topItems,
       });
     } catch (error) {
-      console.error('Error fetching restaurant stats:', error);
-      res.status(500).json({ message: 'Ошибка при получении статистики ресторанов' });
+      console.error("Error fetching restaurant stats:", error);
+      res
+        .status(500)
+        .json({ message: "Ошибка при получении статистики ресторанов" });
     }
   }
 }
