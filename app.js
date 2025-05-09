@@ -3,13 +3,17 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 require('dotenv').config();
+// Add Swagger imports here
+const { swaggerUi, specs } = require('./backend/swagger');
 
 const authRoutes = require('./routes/authRoutes');
 const restaurantRoutes = require('./routes/restaurants');
 const menuRoutes = require('./routes/menu');
 const categoryRoutes = require('./routes/categories');
 const userRoutes = require('./routes/userRoutes');
-const orderRoutes = require('./routes/orderRoutes'); // Добавляем новый маршрут
+const orderRoutes = require('./routes/orderRoutes');
+// Add the new dashboard routes
+const dashboardRoutes = require('./routes/dashboardRoutes');
 
 const app = express();
 
@@ -40,15 +44,19 @@ app.use(
 
 app.use(bodyParser.json());
 
+// Add Swagger route
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+
 // Маршруты
 app.use('/auth', authRoutes);
 app.use('/api/restaurants', restaurantRoutes);
 app.use('/api/menu', menuRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/user', userRoutes);
-// Добавляем маршрут для совместимости с фронтендом
-app.use('/api/users', userRoutes); // Добавляем этот маршрут для поддержки запросов к /api/users/profile
+app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);
+// Add the new dashboard route
+app.use('/api/admin/dashboard', dashboardRoutes);
 
 // Проверка соединения с базой данных
 const db = require('./config/db');
@@ -70,4 +78,5 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Сервер запущен на порту ${PORT}`);
+  console.log(`Swagger документация доступна по адресу: http://localhost:${PORT}/api-docs`);
 });
