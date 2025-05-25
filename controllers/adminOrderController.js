@@ -140,6 +140,7 @@ class AdminOrderController {
       const validStatuses = [
         "pending",
         "processing",
+        "transferring", // Added new status
         "delivering",
         "completed",
         "cancelled",
@@ -204,6 +205,7 @@ class AdminOrderController {
       const validStatuses = [
         "pending",
         "processing",
+        "transferring", // Added new status
         "delivering",
         "completed",
         "cancelled",
